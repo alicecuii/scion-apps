@@ -19,7 +19,9 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/netsec-ethz/scion-apps/_examples/regionrule"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/netsec-ethz/scion-apps/pkg/pan"
@@ -30,11 +32,23 @@ func main() {
 	var err error
 	// get local and remote addresses from program arguments:
 	var listen pan.IPPortValue
+	var preference string
+	var region_rule string
+	var prefs []string
+	prefs, err = GetPreferences("app.yml")
+
 	flag.Var(&listen, "listen", "[Server] local IP:port to listen on")
+	flag.StringVar(&preference, "preference", "", "Preference sorting order for paths. "+
+		"Comma-separated list of available sorting options: "+
+		strings.Join(pan.AvailablePreferencePolicies, "|"))
+	flag.StringVar(&region_rule, "region_rule", "", "Preference sorting order for paths. "+
+		"Comma-separated list of available sorting options: "+
+		strings.Join(prefs, "|"))
+
 	remoteAddr := flag.String("remote", "", "[Client] Remote (i.e. the server's) SCION Address (e.g. 17-ffaa:1:1,[127.0.0.1]:12345)")
 	count := flag.Uint("count", 1, "[Client] Number of messages to send")
 	flag.Parse()
-
+	policy, err := pan.PolicyFromCommandline("", preference, false)
 	if (listen.Get().Port() > 0) == (len(*remoteAddr) > 0) {
 		check(fmt.Errorf("either specify -listen for server or -remote for client"))
 	}
@@ -43,7 +57,7 @@ func main() {
 		err = runServer(listen.Get())
 		check(err)
 	} else {
-		err = runClient(*remoteAddr, int(*count))
+		err = runClient(*remoteAddr, int(*count), policy)
 		check(err)
 	}
 }
@@ -73,12 +87,12 @@ func runServer(listen netaddr.IPPort) error {
 	}
 }
 
-func runClient(address string, count int) error {
+func runClient(address string, count int, policy pan.Policy) error {
 	addr, err := pan.ResolveUDPAddr(context.TODO(), address)
 	if err != nil {
 		return err
 	}
-	conn, err := pan.DialUDP(context.Background(), netaddr.IPPort{}, addr, nil, nil)
+	conn, err := pan.DialUDP(context.Background(), netaddr.IPPort{}, addr, policy, nil)
 	if err != nil {
 		return err
 	}
