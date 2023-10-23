@@ -1,0 +1,18 @@
+apps:
+  - name: app1-net-rules
+    rules:
+      - name: north-america-low-latency
+        ISD: 17
+        Preference: latency
+
+      - name: north-america-bandwidth
+        ISD: 17
+        Preference: bandwidth
+
+      - name: north-america-hops
+        ISD: 17
+        Preference: hops
+
+      - name: north-america-mtu
+        ISD: 17
+        Preference: mtu
