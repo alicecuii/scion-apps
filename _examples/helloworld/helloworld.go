@@ -19,7 +19,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/netsec-ethz/scion-apps/_examples/regionrule"
+	"github.com/alicecuii/scion-apps/_examples/regionrule"
 	"os"
 	"strings"
 	"time"
