@@ -1,4 +1,4 @@
-module github.com/netsec-ethz/scion-apps
+module github.com/alicecuii/scion-apps
 
 go 1.16
 

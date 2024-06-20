@@ -19,12 +19,12 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/alicecuii/scion-apps/_examples/regionrule"
+	"github.com/netsec-ethz/scion-apps/regionrule/regionrule"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/netsec-ethz/scion-apps/pkg/pan"
+	"github.com/alicecuii/scion-apps/pkg/pan"
 	"inet.af/netaddr"
 )
 
